@@ -86,7 +86,7 @@ export default interface MumbleSync {
   on(event: Events.Ready, listener: () => void): this;
 
   /** Context action event */
-  on(event: string, listener: (date: ContextActionData) => void): this;
+  on(event: string, listener: (data: ContextActionData) => void): this;
 }
 
 export default class MumbleSync extends EventEmitter {
