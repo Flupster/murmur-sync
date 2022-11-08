@@ -1,0 +1,26 @@
+{
+  "name": "murmur-sync-client",
+  "version": "0.0.2",
+  "description": "Murmur Sync Client",
+  "author": "Floppy",
+  "license": "MIT",
+  "main": "./dist/main.js",
+  "scripts": {
+    "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
+    "clean": "rm -rf dist build package",
+    "build": "tsc -p tsconfig.json",
+    "build:watch": "nodemon --watch src src/main.ts",
+    "build-all": "yarn clean && yarn build"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.9",
+    "@typescript-eslint/eslint-plugin": "^5.42.1",
+    "@typescript-eslint/parser": "^5.42.1",
+    "eslint": "^8.27.0",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "axios": "^1.1.3",
+    "socket.io-client": "^4.5.3"
+  }
+}
