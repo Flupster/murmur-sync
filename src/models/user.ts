@@ -87,7 +87,7 @@ export default class User {
     return this.sync.api.updateUserState(this.session, { prioritySpeaker });
   }
 
-  async setChannel(channel: MumbleChannel) {
+  async setChannel(channel: Channel) {
     return this.sync.api.updateUserState(this.session, { channel: channel.id });
   }
 
