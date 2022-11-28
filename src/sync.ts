@@ -10,8 +10,8 @@ import Server from "./models/server";
 type ContextActionData = {
   action: string;
   issuer: User;
-  user: User | undefined;
-  channel: Channel | undefined;
+  user: User;
+  channel: Channel;
 };
 
 export const enum Events {
@@ -45,7 +45,7 @@ export default interface MumbleSync {
   channels: Map<number, Channel>;
   api: MumbleApi;
   auth: MumbleAuth;
-  recievedUpdate: boolean;
+  ready: boolean;
 
   /** User connected to the server */
   on(event: Events.UserConnected, listener: (user: User) => void): this;
@@ -96,7 +96,7 @@ export default class MumbleSync extends EventEmitter {
     this.manager = new MumbleEventManager(this.socket);
     this.api = new MumbleApi(hostname);
     this.auth = new MumbleAuth(this);
-    this.recievedUpdate = false;
+    this.ready = false;
 
     this.server = new Server(this);
     this.users = new Map<number, User>();
@@ -184,8 +184,8 @@ export default class MumbleSync extends EventEmitter {
         this.channels.set(channel.id, new Channel(channel, this));
       }
 
-      if (!this.recievedUpdate) {
-        this.recievedUpdate = true;
+      if (!this.ready) {
+        this.ready = true;
         this.emit(Events.Ready);
       }
     });
