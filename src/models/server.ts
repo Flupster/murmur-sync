@@ -34,7 +34,8 @@ export default class Server {
   async setMotd(motd: string, sendNewMotd = false) {
     await this.sync.api.setConfKey("welcometext", motd);
     if (sendNewMotd) {
-      await this.sync.api.sendWelcomeMessage([...this.sync.users.keys()]);
+      const sessionids = [...this.sync.users.values()].map((user) => user.session);
+      await this.sync.api.sendWelcomeMessage(sessionids);
     }
   }
 }

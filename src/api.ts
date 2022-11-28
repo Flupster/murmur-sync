@@ -125,8 +125,8 @@ export default class MumbleApi {
   }
 
   // Other stuff
-  async sendWelcomeMessage(userids: number[]) {
-    return this.instance.post("/sendwelcomemessage", { userids }).catch((e) => {
+  async sendWelcomeMessage(sessionids: number[]) {
+    return this.instance.post("/sendwelcomemessage", { sessionids }).catch((e) => {
       if (e.response.status === 500) {
         console.error("sendWelcomeMessage is not supported on this server");
       }
