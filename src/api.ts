@@ -55,7 +55,7 @@ export default class MumbleApi {
   }
 
   async addUserToGroup(session: number, channel: number, group: string) {
-    return this.instance.postForm(`/users/${session}/groups/app`, { channel, group });
+    return this.instance.postForm(`/users/${session}/groups/add`, { channel, group });
   }
 
   async removeUserFromGroup(session: number, channel: number, group: string) {
