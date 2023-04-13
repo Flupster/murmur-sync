@@ -180,3 +180,43 @@ declare interface ContextAction {
   /** If not -1, id of target channel */
   channel: MumbleChannel["id"];
 }
+
+declare interface Config {
+  [key: string]: string;
+  allowhtml: string;
+  bandwidth: string;
+  bonjour: string;
+  certificate: string;
+  certrequired: string;
+  certrequired: string;
+  channelcountlimit: string;
+  channelname: string;
+  channelnestinglimit: string;
+  defaultchannel: string;
+  forceExternalAuth: string;
+  host: string;
+  kdfiterations: string;
+  legacypasswordhash: string;
+  obfuscate: string;
+  opusthreshold: string;
+  password: string;
+  port: string;
+  registerhostname: string;
+  registerlocation: string;
+  registername: string;
+  registerpassword: string;
+  registerurl: string;
+  rememberchannel: string;
+  rememberchannelduration: string;
+  sslCiphers: string;
+  sslDHParams: string;
+  suggestpositional: string;
+  suggestpushtotalk: string;
+  suggestversion: string;
+  textmessagelength: string;
+  timeout: string;
+  username: string;
+  users: string;
+  welcometext: string;
+  welcometextfile: string;
+}

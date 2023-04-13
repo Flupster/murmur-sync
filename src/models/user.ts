@@ -119,4 +119,12 @@ export default class User {
   async removeFromGroup(group: string, channel = 0) {
     return this.sync.api.removeUserFromGroup(this.session, channel, group);
   }
+
+  async getListenerVolume(channel: Channel) {
+    return this.sync.api.getListenerVolumeAdjustment(this.session, channel.id);
+  }
+
+  async setListenerVolume(channel: Channel, volume: number) {
+    return this.sync.api.setListenerVolumeAdjustment(this.session, channel.id, volume);
+  }
 }

@@ -16,25 +16,25 @@ export default class MumbleApi {
   }
 
   // Server stuff
-  async getServer(): Promise<Server> {
+  async getServer() {
     const response = await this.instance.get("/");
-    return response.data;
+    return response.data as Server;
   }
 
-  async getTree(): Promise<Tree> {
+  async getTree() {
     const response = await this.instance.get("/tree");
-    return response.data;
+    return response.data as Tree;
   }
 
-  async getBans(): Promise<MumbleBan[]> {
+  async getBans() {
     const response = await this.instance.get("/bans");
-    return Object.values(response.data);
+    return Object.values(response.data) as MumbleBan[];
   }
 
   // User stuff
-  async getUsers(): Promise<MumbleUser[]> {
+  async getUsers() {
     const response = await this.instance.get("/users");
-    return Object.values(response.data);
+    return Object.values(response.data) as MumbleUser[];
   }
 
   async updateUserState(session: number, user: Partial<MumbleUser>) {
@@ -51,7 +51,7 @@ export default class MumbleApi {
 
   async getCertificateList(session: number) {
     const response = await this.instance.get(`/users/${session}/certificateList`);
-    return response.data;
+    return response.data as string;
   }
 
   async addUserToGroup(session: number, channel: number, group: string) {
@@ -63,18 +63,18 @@ export default class MumbleApi {
   }
 
   // Channel stuff
-  async getChannels(): Promise<MumbleChannel[]> {
+  async getChannels() {
     const response = await this.instance.get("/channels");
-    return Object.values(response.data);
+    return Object.values(response.data) as MumbleChannel[];
   }
 
   async updateChannelState(id: number, channel: Partial<MumbleChannel>) {
     return this.instance.post(`/channels/${id}`, channel);
   }
 
-  async createChannel(name: string, parent: number): Promise<MumbleChannel> {
+  async createChannel(name: string, parent: number) {
     const response = await this.instance.postForm("/channels", { name, parent });
-    return response.data;
+    return response.data as MumbleChannel;
   }
 
   async removeChannel(id: number) {
@@ -85,15 +85,15 @@ export default class MumbleApi {
     return this.instance.postForm(`/message/channel`, { channel, tree, message });
   }
 
-  async getACL(id: number): Promise<MumbleACL> {
+  async getACL(id: number) {
     const response = await this.instance.get(`/acl/${id}`);
-    return response.data;
+    return response.data as MumbleACL;
   }
 
   // Auth stuff
-  async getAuthUsers(): Promise<AuthUser[]> {
+  async getAuthUsers() {
     const response = await this.instance.get("/auth");
-    return Object.values(response.data);
+    return Object.values(response.data) as AuthUser[];
   }
 
   async updateAuthUser(users: AuthUser[]) {
@@ -107,17 +107,17 @@ export default class MumbleApi {
   // Config stuff
   async getConfig() {
     const response = await this.instance.get("/conf");
-    return response.data;
+    return response.data as Partial<Config>;
   }
 
   async getDefaultConfig() {
     const response = await this.instance.get("/conf/default");
-    return response.data;
+    return response.data as Partial<Config>;
   }
 
   async getConfKey(key: string) {
     const response = await this.instance.get(`/conf/${key}`);
-    return response.data;
+    return response.data as string;
   }
 
   async setConfKey(key: string, value: string) {
@@ -139,6 +139,15 @@ export default class MumbleApi {
 
   async setSuperuserPassword(password: string) {
     return this.instance.postForm(`/setSuperuserPassword`, { password });
+  }
+
+  async getListenerVolumeAdjustment(session: number, channel: number) {
+    const response = await this.instance.get(`/listenervolumeadjustment/${channel}/${session}`);
+    return response.data as number;
+  }
+
+  async setListenerVolumeAdjustment(session: number, channel: number, adjustment: number) {
+    return this.instance.postForm(`/listenervolumeadjustment/${channel}/${session}`, { adjustment });
   }
 
   createInstance(hostname: string) {
