@@ -61,4 +61,8 @@ export default class Channel implements MumbleChannel {
   async delete() {
     return this.sync.api.removeChannel(this.id);
   }
+
+  async sendMessage(message: string, tree = false) {
+    return this.sync.api.sendChannelMessage(this.id, message, tree);
+  }
 }

@@ -120,11 +120,24 @@ export default class User {
     return this.sync.api.removeUserFromGroup(this.session, channel, group);
   }
 
+  async getListeningChannels() {
+    const channelIds = await this.sync.api.getListenerChannels(this.session);
+    return channelIds.map((id) => this.sync.channels.get(id));
+  }
+
+  async listen(channel: Channel) {
+    await this.sync.api.addListener(this.session, channel.id);
+  }
+
+  async unlisten(channel: Channel) {
+    await this.sync.api.removeListener(this.session, channel.id);
+  }
+
   async getListenerVolume(channel: Channel) {
-    return this.sync.api.getListenerVolumeAdjustment(this.session, channel.id);
+    return this.sync.api.getListenerVolume(this.session, channel.id);
   }
 
   async setListenerVolume(channel: Channel, volume: number) {
-    return this.sync.api.setListenerVolumeAdjustment(this.session, channel.id, volume);
+    return this.sync.api.setListenerVolume(this.session, channel.id, volume);
   }
 }

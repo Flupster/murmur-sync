@@ -17,17 +17,17 @@ export default class MumbleApi {
 
   // Server stuff
   async getServer() {
-    const response = await this.instance.get("/");
+    const response = await this.instance.get("/server");
     return response.data as Server;
   }
 
   async getTree() {
-    const response = await this.instance.get("/tree");
+    const response = await this.instance.get("/server/tree");
     return response.data as Tree;
   }
 
   async getBans() {
-    const response = await this.instance.get("/bans");
+    const response = await this.instance.get("/server/bans");
     return Object.values(response.data) as MumbleBan[];
   }
 
@@ -42,7 +42,7 @@ export default class MumbleApi {
   }
 
   async sendUserMessage(session: number, message: string) {
-    return this.instance.postForm(`/message/user`, { session, message });
+    return this.instance.postForm(`/users/${session}/message`, { message });
   }
 
   async kickUser(session: number, reason: string) {
@@ -81,8 +81,8 @@ export default class MumbleApi {
     return this.instance.delete(`/channels/${id}`);
   }
 
-  async sendChannelMessage(channel: number, message: string, tree = false) {
-    return this.instance.postForm(`/message/channel`, { channel, tree, message });
+  async sendChannelMessage(id: number, message: string, tree = false) {
+    return this.instance.postForm(`/channels/${id}/message`, { tree, message });
   }
 
   async getACL(id: number) {
@@ -126,7 +126,7 @@ export default class MumbleApi {
 
   // Other stuff
   async sendWelcomeMessage(sessionids: number[]) {
-    return this.instance.post("/sendwelcomemessage", { sessionids }).catch((e) => {
+    return this.instance.post("/server/sendwelcomemessage", { sessionids }).catch((e) => {
       if (e.response.status === 500) {
         console.error("sendWelcomeMessage is not supported on this server");
       }
@@ -134,20 +134,43 @@ export default class MumbleApi {
   }
 
   async addContextAction(session: number, action: string, text: string, scope: ContextActionScope) {
-    return this.instance.post("/context", { session, action, text, scope });
+    return this.instance.post("/server/context", { session, action, text, scope });
   }
 
   async setSuperuserPassword(password: string) {
-    return this.instance.postForm(`/setSuperuserPassword`, { password });
+    return this.instance.postForm(`/server/setSuperuserPassword`, { password });
   }
 
-  async getListenerVolumeAdjustment(session: number, channel: number) {
-    const response = await this.instance.get(`/listenervolumeadjustment/${channel}/${session}`);
+  async getListenerChannels(session: number) {
+    const response = await this.instance.get(`/listeners/${session}`);
+    return response.data as number[];
+  }
+
+  async getListenerUsers(channel: number) {
+    const response = await this.instance.get(`/listeners/${channel}/users`);
+    return response.data as number[];
+  }
+
+  async getIsListening(session: number, channel: number) {
+    const response = await this.instance.get(`/listeners/${session}/${channel}`);
+    return response.data as boolean;
+  }
+
+  async addListener(session: number, channel: number) {
+    return this.instance.post(`/listeners/${session}/${channel}`);
+  }
+
+  async removeListener(session: number, channel: number) {
+    return this.instance.delete(`/listeners/${session}/${channel}`);
+  }
+
+  async getListenerVolume(session: number, channel: number) {
+    const response = await this.instance.get(`/listeners/${session}/${channel}/volume`);
     return response.data as number;
   }
 
-  async setListenerVolumeAdjustment(session: number, channel: number, adjustment: number) {
-    return this.instance.postForm(`/listenervolumeadjustment/${channel}/${session}`, { adjustment });
+  async setListenerVolume(session: number, channel: number, adjustment: number) {
+    return this.instance.postForm(`/listeners/${session}/${channel}/volume`, { adjustment });
   }
 
   createInstance(hostname: string) {
