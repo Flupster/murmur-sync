@@ -35,6 +35,8 @@ export const enum Events {
   UserNameChanged = "userNameChanged",
 
   Ready = "ready",
+
+  All = "*",
 }
 
 export default interface MumbleSync {
@@ -54,7 +56,7 @@ export default interface MumbleSync {
   /** User state changed, example: channel changed, name changed, muted, deafened... etc etc */
   on(event: Events.UserStateChanged, listener: (user: User, oldUser: User) => void): this;
   /** User sent a message */
-  on(event: Events.UserTextMessage, listener: (user: User, message: string) => void): this;
+  on(event: Events.UserTextMessage, listener: (user: User, message: TextMessage) => void): this;
   /** A channel was created */
   on(event: Events.ChannelCreated, listener: (channel: Channel) => void): this;
   /** A channel was removed */
@@ -84,6 +86,9 @@ export default interface MumbleSync {
 
   /** The sync is ready to use and has data */
   on(event: Events.Ready, listener: () => void): this;
+
+  /** All events */
+  on(event: Events.All, listener: (type: string, data: any[]) => void): this;
 
   /** Context action event */
   on(event: string, listener: (data: ContextActionData) => void): this;
@@ -231,5 +236,10 @@ export default class MumbleSync extends EventEmitter {
     if (user.name !== oldUser.name) {
       this.emit(Events.UserNameChanged, user);
     }
+  }
+
+  emit(type: string, ...args: any[]) {
+    super.emit(Events.All, type, args);
+    return super.emit(type, ...args) || super.emit("", ...args);
   }
 }
