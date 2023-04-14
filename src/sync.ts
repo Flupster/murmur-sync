@@ -88,7 +88,7 @@ export default interface MumbleSync {
   on(event: Events.Ready, listener: () => void): this;
 
   /** All events */
-  on(event: Events.All, listener: (type: string, data: any[]) => void): this;
+  on(event: Events.All, listener: (type: string, data: unknown[]) => void): this;
 
   /** Context action event */
   on(event: string, listener: (data: ContextActionData) => void): this;
@@ -238,7 +238,7 @@ export default class MumbleSync extends EventEmitter {
     }
   }
 
-  emit(type: string, ...args: any[]) {
+  emit(type: string, ...args: unknown[]) {
     super.emit(Events.All, type, args);
     return super.emit(type, ...args) || super.emit("", ...args);
   }
