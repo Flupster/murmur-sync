@@ -212,8 +212,8 @@ export default class MumbleApi {
     return axios.create({
       baseURL: hostname,
       timeout: 1000,
-      httpAgent: new http.Agent({ keepAlive: true }),
-      httpsAgent: new https.Agent({ keepAlive: true }),
+      httpAgent: new http.Agent({ keepAlive: true, keepAliveMsecs: 61000 }),
+      httpsAgent: new https.Agent({ keepAlive: true, keepAliveMsecs: 61000 }),
       ...axios.defaults,
     });
   }
