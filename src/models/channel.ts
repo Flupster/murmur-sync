@@ -1,4 +1,5 @@
 import MumbleSync from "../sync";
+import User from "./user";
 
 export default interface Channel extends MumbleChannel {
   /** Channel ID. This is unique per channel, and the root channel is always id 0. */
@@ -64,5 +65,17 @@ export default class Channel implements MumbleChannel {
 
   async sendMessage(message: string, tree = false) {
     return this.sync.api.sendChannelMessage(this.id, message, tree);
+  }
+
+  async isUserListening(user: User) {
+    return this.sync.api.getIsListening(this.id, user.session);
+  }
+
+  async setUserListening(user: User, shouldListen: boolean) {
+    if (shouldListen) {
+      return this.sync.api.addListener(this.id, user.session);
+    }
+
+    return this.sync.api.removeListener(this.id, user.session);
   }
 }

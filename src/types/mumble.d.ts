@@ -162,6 +162,8 @@ declare interface Server {
   uptime_seconds: number;
   /** length of the log */
   log_length: number;
+  /** version */
+  version: string;
 }
 
 declare interface Tree {
@@ -219,4 +221,14 @@ declare interface Config {
   users: string;
   welcometext: string;
   welcometextfile: string;
+}
+
+declare interface UserInfo {
+  UserName: string;
+  UserLastActive: string;
+  UserEmail?: string;
+  UserComment?: string;
+  UserHash?: string;
+  UserPassword?: string;
+  UserKDFIterations?: string;
 }

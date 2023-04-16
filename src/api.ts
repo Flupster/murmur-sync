@@ -31,6 +31,31 @@ export default class MumbleApi {
     return Object.values(response.data) as MumbleBan[];
   }
 
+  async getUsernames(ids: number[]) {
+    const response = await this.instance.post("/server/usernames", { ids });
+    return response.data as Record<string, string>;
+  }
+
+  async getUserids(usernames: string[]) {
+    const response = await this.instance.post("/server/userids", { usernames });
+    return response.data as Record<string, number>;
+  }
+
+  async getRegisteredUsers() {
+    const response = await this.instance.get("/users/registrations");
+    return response.data as Record<string, string>;
+  }
+
+  async getRegisteredUser(userid: number) {
+    const response = await this.instance.get(`/users/${userid}/registration`);
+    return response.data as UserInfo;
+  }
+
+  async getServerId() {
+    const response = await this.instance.get("/server/id");
+    return response.data as number;
+  }
+
   // User stuff
   async getUsers() {
     const response = await this.instance.get("/users");
@@ -60,6 +85,16 @@ export default class MumbleApi {
 
   async removeUserFromGroup(session: number, channel: number, group: string) {
     return this.instance.postForm(`/users/${session}/groups/remove`, { channel, group });
+  }
+
+  async getUserPermissions(session: number, channel: number) {
+    const response = await this.instance.get(`/users/${session}/${channel}/permissions`);
+    return response.data as number;
+  }
+
+  async hasPermissions(session: number, channel: number, bitmask: number) {
+    const response = await this.instance.postForm(`/users/${session}/${channel}/permissions`, { bitmask });
+    return response.data as boolean;
   }
 
   // Channel stuff
@@ -138,7 +173,7 @@ export default class MumbleApi {
   }
 
   async setSuperuserPassword(password: string) {
-    return this.instance.postForm(`/server/setSuperuserPassword`, { password });
+    return this.instance.postForm(`/server/superuserpassword`, { password });
   }
 
   async getListenerChannels(session: number) {

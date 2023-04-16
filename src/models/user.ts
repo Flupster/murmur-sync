@@ -51,8 +51,6 @@ export default interface User {
   udpPing: number;
   /** TCP Ping Average. This is the average ping for the user via TCP over the duration of the connection. */
   tcpPing: number;
-
-  getChannel(): Channel;
 }
 
 export default class User {
@@ -62,7 +60,7 @@ export default class User {
   }
 
   getChannel() {
-    return this.sync.channels.get(this.channel);
+    return this.sync.channels.get(this.channel) as Channel;
   }
 
   // State Updates
@@ -125,11 +123,11 @@ export default class User {
     return channelIds.map((id) => this.sync.channels.get(id));
   }
 
-  async listen(channel: Channel) {
-    await this.sync.api.addListener(this.session, channel.id);
-  }
+  async listen(channel: Channel, shouldListen: boolean) {
+    if (shouldListen) {
+      await this.sync.api.addListener(this.session, channel.id);
+    }
 
-  async unlisten(channel: Channel) {
     await this.sync.api.removeListener(this.session, channel.id);
   }
 
@@ -139,5 +137,13 @@ export default class User {
 
   async setListenerVolume(channel: Channel, volume: number) {
     return this.sync.api.setListenerVolume(this.session, channel.id, volume);
+  }
+
+  async getChannelPermissions(channel: Channel) {
+    return this.sync.api.getUserPermissions(this.session, channel.id);
+  }
+
+  async hasPermissions(channel: Channel, permissions: number) {
+    return this.sync.api.hasPermissions(this.session, channel.id, permissions);
   }
 }
