@@ -15,6 +15,8 @@ type ContextActionData = {
 };
 
 export const enum Events {
+  AuthAttempt = "authAttempt",
+
   UserConnected = "userConnected",
   UserStateChanged = "userStateChanged",
   UserDisconnected = "userDisconnected",
@@ -49,6 +51,8 @@ export default interface MumbleSync {
   auth: MumbleAuth;
   ready: boolean;
 
+  /** Authentication attempt to the server */
+  on(event: Events.AuthAttempt, listener: (username: string, password: string) => void): this;
   /** User connected to the server */
   on(event: Events.UserConnected, listener: (user: User) => void): this;
   /** User disconnected to the server */
@@ -178,6 +182,10 @@ export default class MumbleSync extends EventEmitter {
       const channel = this.channels.get(context.channel);
       const user = [...this.users.values()].find((u) => u.session === context.session);
       this.emit(action, { action, issuer, user, channel });
+    });
+
+    this.manager.on(ManagerEvents.AuthAttempt, (username, password) => {
+      this.emit(Events.AuthAttempt, username, password);
     });
 
     this.manager.on(ManagerEvents.Update, (update) => {
