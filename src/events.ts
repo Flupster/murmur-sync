@@ -2,6 +2,7 @@ import EventEmitter from "events";
 import { Socket } from "socket.io-client";
 
 export enum Events {
+  AuthAttempt = "authAttempt",
   Update = "update",
   Context = "context",
   UserConnected = "userConnected",
@@ -15,6 +16,7 @@ export enum Events {
 
 export default interface MumbleEventManager {
   socket: Socket;
+  on(event: Events.AuthAttempt, listener: (username: string, password: string) => void): this;
   on(event: Events.Update, listener: (update: MumbleUpdate) => void): this;
   on(event: Events.Context, listener: (event: ContextAction) => void): this;
   on(event: Events.UserConnected, listener: (user: MumbleUser) => void): this;
@@ -39,6 +41,7 @@ declare interface MumbleEvent {
 export default class MumbleEventManager extends EventEmitter {
   constructor(socket: Socket) {
     super();
+    socket.on(Events.AuthAttempt, this.authAttempt.bind(this));
     socket.on(Events.Update, this.update.bind(this));
     socket.on(Events.Context, this.context.bind(this));
 
@@ -49,6 +52,10 @@ export default class MumbleEventManager extends EventEmitter {
     socket.on(Events.ChannelCreated, this.channelCreated.bind(this));
     socket.on(Events.ChannelRemoved, this.channelRemoved.bind(this));
     socket.on(Events.ChannelStateChanged, this.channelStateChanged.bind(this));
+  }
+
+  private authAttempt(username: string, password: string) {
+    this.emit(Events.AuthAttempt, username, password);
   }
 
   private update(event: MumbleUpdate) {
