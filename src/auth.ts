@@ -28,4 +28,9 @@ export default class MumbleAuth {
   async deleteUser(user: AuthUser) {
     await this.sync.api.deleteAuthUser(user);
   }
+
+  /** Flushes the cache, this deletes all users */
+  async flushCache() {
+    await this.sync.api.flushAuthCache();
+  }
 }

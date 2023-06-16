@@ -139,6 +139,10 @@ export default class MumbleApi {
     return this.instance.delete(`/auth`, { params: { username: user.username } });
   }
 
+  async flushAuthCache() {
+    return this.instance.delete(`/auth/flush`);
+  }
+
   // Config stuff
   async getConfig() {
     const response = await this.instance.get("/conf");
