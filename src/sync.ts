@@ -101,7 +101,7 @@ export default interface MumbleSync {
 export default class MumbleSync extends EventEmitter {
   constructor(hostname: string) {
     super();
-    this.socket = io(hostname, { path: "/ws/socket.io" });
+    this.socket = io(hostname);
     this.manager = new MumbleEventManager(this.socket);
     this.api = new MumbleApi(hostname);
     this.auth = new MumbleAuth(this);
